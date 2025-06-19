@@ -3,27 +3,35 @@ import PetController from '../controller/petController';
 import PetRepository from '../repository/PetRepository';
 import { AppDataSource } from '../config/dataSource';
 
-const petRouter = express.Router();
+const router = express.Router();
 const petRepository = new PetRepository(
-	AppDataSource.getRepository('PetEntity')
+	AppDataSource.getRepository('PetEntity'),
+	AppDataSource.getRepository('AdotanteEntity')
 );
 const petController = new PetController(petRepository);
 
-petRouter.post('/pets', (req, res) => {
+router.post('/', (req, res) => {
 	petController.criarPet(req, res);
 });
 
-petRouter.get('/pets', (req, res) => {
+router.get('/', (req, res) => {
 	petController.listaPets(req, res);
 });
 
-petRouter.put('/pets/:id', (req, res) => {
+router.put('/:id', (req, res) => {
 	petController.atualizaPet(req, res);
 });
 
-petRouter.delete('/pets/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 	petController.deletaPet(req, res);
 });
 
+router.put('/:pet_id/:adotante_id', (req, res) => {
+	petController.adotaPet(req, res);
+});
 
-export default petRouter;
+router.get('/filtro', (req, res) => {
+	petController.buscaPetPorCampoGenerico(req, res);
+});
+
+export default router;
